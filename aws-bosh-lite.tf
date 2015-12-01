@@ -88,7 +88,7 @@ resource "aws_security_group" "allow_bosh_lite_and_cf" {
 
 resource "aws_instance" "bosh-lite" {
     ami = "${var.aws_bosh_lite_ami}"
-    instance_type = "m3.xlarge"
+    instance_type = "${var.aws_bosh_lite_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
     security_groups = ["bosh_lite_and_cf"]
@@ -123,7 +123,7 @@ resource "aws_instance" "bosh-lite" {
 
 resource "aws_instance" "jumpbox" {
     ami = "${var.aws_jumpbox_ami}"
-    instance_type = "m3.medium"
+    instance_type = "${var.aws_jumpbox_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
     security_groups = ["ssh_only"]

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 BOSH_DIRECTOR_IP=${1}
 STEMCELL=${2}
 WORKSPACE=$HOME/workspace
@@ -11,17 +14,13 @@ echo CF_RELEASE is at $CF_RELEASE
 cd $HOME
 
 echo Updating Aptitude and installing dependencies...
-sudo apt-get update -y
-sudo apt-get install -y git unzip wget
+sudo apt-get update -y -qq
+sudo apt-get install -y -qq git unzip wget
 ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
 
 echo Installing Bosh CLI
-
-#sudo chown ubuntu:ubuntu .gem -R
-
 curl -s https://raw.githubusercontent.com/cloudfoundry-community/traveling-bosh/master/scripts/installer | bash
-source /home/ubuntu/.bashrc
-sudo gem install bundler --no-ri --no-doc
+export PATH=$PATH:$HOME/bin/traveling-bosh
 
 echo Installing spiff
 wget -qq https://github.com/cloudfoundry-incubator/spiff/releases/download/v1.0.7/spiff_linux_amd64.zip
@@ -45,7 +44,7 @@ bosh -u admin -p admin target $BOSH_DIRECTOR_IP
 bosh login admin admin
 
 echo Uploading stemcell
-bosh -q -n upload stemcell https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3126-warden-boshlite-ubuntu-trusty-go_agent.tgz
+bosh -q -n upload stemcell --skip-if-exists https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3126-warden-boshlite-ubuntu-trusty-go_agent.tgz
 
 echo Cloning Bosh Lite from GitHub...
 git clone -q https://github.com/cloudfoundry/cf-release.git
@@ -56,7 +55,7 @@ echo Updating CF release
 ./scripts/update &>/dev/null
 
 echo Generating manifest
-sudo ./scripts/generate-bosh-lite-dev-manifest $AWS_MANIFEST_STUB
+./scripts/generate-bosh-lite-dev-manifest $AWS_MANIFEST_STUB
 
 echo Creating release
 bosh create release --name cf

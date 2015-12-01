@@ -7,6 +7,14 @@ variable "aws_bosh_lite_ami" {}
 
 variable "bosh_lite_stemcell" {}
 
+variable "aws_jumpbox_instance_type" {
+  default = "m4.large"
+}
+
+variable "aws_bosh_lite_instance_type" {
+  default = "m3.xlarge"
+}
+
 variable "aws_region" {
   default = "us-east-1"
 }

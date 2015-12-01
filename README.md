@@ -7,6 +7,17 @@ First, go get [terraform](https://terraform.io/downloads.html). Unzip the file a
 ## Configuring
 
 Copy the `terraform.tfvars.example` to `terraform.tfvars` and edit this file. Replace the values of the placeholder variables with your values.
+In order to protect and secure the AWS keys, you need to create two environment variables that will hold the AWS Key and secret key values.
+
+* TF_VAR_aws_access_key
+* TF_VAR_aws_secret_key
+
+Example:
+
+```
+export TF_VAR_aws_access_key="THE_ACCESS_KEY_VALUE"
+export TF_VAR_aws_secret_key="THE_SECRET_KEY_VALUE"
+```
 
 ## Running
 `terraform plan` will tell you the execution plan.
