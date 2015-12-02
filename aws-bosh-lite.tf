@@ -9,7 +9,7 @@ output "aws_key_path" {
 }
 
 resource "aws_security_group" "ssh_only" {
-  name = "ssh_only"
+  name = "${var.prefix}-ssh-only"
   description = "Allow SSH only inbound traffic"
 
   ingress {
@@ -27,12 +27,12 @@ resource "aws_security_group" "ssh_only" {
   }
 
   tags {
-    Name = "ssh_only"
+    Name = "${var.prefix}-ssh-only"
   }
 }
 
 resource "aws_security_group" "allow_bosh_lite_and_cf" {
-  name = "bosh_lite_and_cf"
+  name = "${var.prefix}-bosh-lite-and-cf"
   description = "Allow BOSH and SSH only inbound traffic"
 
   ingress {
@@ -59,14 +59,6 @@ resource "aws_security_group" "allow_bosh_lite_and_cf" {
       cidr_blocks = ["0.0.0.0/0"]
   }
 
-	ingress {
-      self = true
-			from_port = 4443
-      to_port = 4443
-      protocol = "tcp"
-      cidr_blocks = ["0.0.0.0/0"]
-  }
-
   ingress {
       from_port = 25555
       to_port = 25555
@@ -82,7 +74,7 @@ resource "aws_security_group" "allow_bosh_lite_and_cf" {
   }
 
   tags {
-    Name = "bosh_lite_and_cf"
+    Name = "${var.prefix}-bosh-lite-and-cf"
   }
 }
 
@@ -91,20 +83,19 @@ resource "aws_instance" "bosh-lite" {
     instance_type = "${var.aws_bosh_lite_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
-    security_groups = ["bosh_lite_and_cf"]
+    security_groups = ["${var.prefix}bosh_lite_and_cf"]
     root_block_device {
         volume_type = "standard"
         volume_size = 80
     }
     tags {
-      Name = "${var.bosh_lite_box_name}"
+      Name = "${var.prefix}-${var.bosh_lite_box_name}"
     }
 
     connection {
       user = "ubuntu"
       key_file = "${var.aws_key_path}"
     }
-
 
     provisioner "file" {
       source = "${path.module}/set_routing_cf.sh"
@@ -117,8 +108,6 @@ resource "aws_instance" "bosh-lite" {
           "sudo /home/ubuntu/set_routing_cf.sh"
       ]
     }
-
-
 }
 
 resource "aws_instance" "jumpbox" {
@@ -126,13 +115,13 @@ resource "aws_instance" "jumpbox" {
     instance_type = "${var.aws_jumpbox_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
-    security_groups = ["ssh_only"]
+    security_groups = ["${var.prefix}-ssh-only"]
     root_block_device {
         volume_type = "standard"
         volume_size = 40
     }
     tags {
-      Name = "${var.jumpbox_name}"
+      Name = "${var.prefix}-${var.jumpbox_name}"
     }
 
     connection {
@@ -153,11 +142,11 @@ resource "aws_instance" "jumpbox" {
     }
 }
 
-output "jumpbox_ip" {
+output "jumpbox-ip" {
   value = "${aws_instance.jumpbox.public_ip}"
 }
 
 
-output "boshlite_ip" {
+output "boshlite-ip" {
   value = "${aws_instance.bosh-lite.public_ip}"
 }

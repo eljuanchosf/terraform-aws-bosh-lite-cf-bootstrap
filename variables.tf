@@ -4,6 +4,7 @@ variable "aws_key_path" {}
 variable "aws_key_name" {}
 variable "aws_jumpbox_ami" {}
 variable "aws_bosh_lite_ami" {}
+variable "prefix" {}
 
 variable "bosh_lite_stemcell" {}
 
