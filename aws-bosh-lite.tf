@@ -9,7 +9,7 @@ output "aws_key_path" {
 }
 
 resource "aws_security_group" "ssh_only" {
-  name = "${var.prefix}-ssh-only"
+  name = "${var.prefix}-${var.jumpbox_security_group}"
   description = "Allow SSH only inbound traffic"
 
   ingress {
@@ -27,12 +27,12 @@ resource "aws_security_group" "ssh_only" {
   }
 
   tags {
-    Name = "${var.prefix}-ssh-only"
+    Name = "${var.prefix}-${var.jumpbox_security_group}"
   }
 }
 
 resource "aws_security_group" "allow_bosh_lite_and_cf" {
-  name = "${var.prefix}-bosh-lite-and-cf"
+  name = "${var.prefix}-${var.bosh_lite_security_group}"
   description = "Allow BOSH and SSH only inbound traffic"
 
   ingress {
@@ -83,7 +83,7 @@ resource "aws_instance" "bosh-lite" {
     instance_type = "${var.aws_bosh_lite_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
-    security_groups = ["${var.prefix}bosh_lite_and_cf"]
+    security_groups = ["${var.prefix}-${var.bosh_lite_security_group}"]
     root_block_device {
         volume_type = "standard"
         volume_size = 80
@@ -115,7 +115,7 @@ resource "aws_instance" "jumpbox" {
     instance_type = "${var.aws_jumpbox_instance_type}"
     key_name = "${var.aws_key_name}"
     associate_public_ip_address = true
-    security_groups = ["${var.prefix}-ssh-only"]
+    security_groups = ["${var.prefix}-${var.jumpbox_security_group}"]
     root_block_device {
         volume_type = "standard"
         volume_size = 40
@@ -142,11 +142,10 @@ resource "aws_instance" "jumpbox" {
     }
 }
 
-output "jumpbox-ip" {
+# Outputs
+output "${var.prefix}-jumpbox-ip" {
   value = "${aws_instance.jumpbox.public_ip}"
 }
-
-
-output "boshlite-ip" {
+output "${var.prefix}-bosh-lite-ip" {
   value = "${aws_instance.bosh-lite.public_ip}"
 }
