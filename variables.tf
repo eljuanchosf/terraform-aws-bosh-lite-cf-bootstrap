@@ -11,8 +11,11 @@ variable "aws_region" {
   default = "us-east-1"
 }
 
-# Variables for Jumpbox
+variable "prefix" {
+  default = "my"
+}
 
+# Variables for Jumpbox
 variable "aws_jumpbox_instance_type" {
   default = "m4.large"
 }
