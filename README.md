@@ -30,8 +30,7 @@ Running with Shape
 ./shape.sh apply -p=myprefix --add-jumpbox --mysql --logsearch
 ```
 
-The first parameter is any `terraform` command, such as `plan` or `apply`
-
+-	The first parameter is any `terraform` command, such as `plan` or `apply`
 -	`-p` or `--prefix` specifies a prefix. If none is provided, a random word will be generated.
 -	`--add-jumpbox` adds the Jumpbox IP configuration to the SSH config file for easy access. This option works only for the `apply` command.
 -	`--mysql` **not implemented** deploys the MySQL BOSH Release and registers the service broker.
