@@ -143,9 +143,9 @@ resource "aws_instance" "jumpbox" {
 }
 
 # Outputs
-output "${var.prefix}-jumpbox-ip" {
+output "jumpbox_ip" {
   value = "${aws_instance.jumpbox.public_ip}"
 }
-output "${var.prefix}-bosh-lite-ip" {
+output "bosh_lite_ip" {
   value = "${aws_instance.bosh-lite.public_ip}"
 }

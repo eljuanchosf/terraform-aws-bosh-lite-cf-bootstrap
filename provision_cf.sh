@@ -3,7 +3,6 @@
 set -e
 
 BOSH_DIRECTOR_IP=${1}
-STEMCELL=${2}
 WORKSPACE=$HOME/workspace
 CF_RELEASE=$WORKSPACE/cf-release
 AWS_MANIFEST_STUB=$WORKSPACE/aws_manifest_stub.yml
