@@ -75,19 +75,20 @@ export TF_VAR_prefix="${PREFIX}"
 terraform $TERRAFORM_COMMAND
 
 if [[ $TERRAFORM_COMMAND = "apply" ]]; then
-JUMPBOX_IP=$(terraform output jumpbox_ip)
-KEY_PATH=$(terraform output aws_key_path)
+  JUMPBOX_IP=$(terraform output jumpbox_ip)
+  KEY_PATH=$(terraform output aws_key_path)
 
-if [[ $ADD_TO_SSH_CONFIG = true ]]; then
-cat >> $SSH_CONFIG_FILE <<EOL
+  if [[ $ADD_TO_SSH_CONFIG = true ]]; then
+    cat >> $SSH_CONFIG_FILE <<EOL
+
 Host ${PREFIX}_jumpbox
   User ubuntu
   HostName ${JUMPBOX_IP}
   Port 22
   IdentityFile ${KEY_PATH}
 EOL
-echo -e "\nYou can access the jumpbox by doing: \e[97mssh ${PREFIX}_jumpbox\e[0m\n"
-else
-  echo -e "\nYou can access the jumpbox by doing: \e[97mssh -i ${KEY_PATH} ubuntu@${JUMPBOX_IP}\e[0m\n"
-fi
+    echo -e "\nYou can access the jumpbox by doing: \e[97mssh ${PREFIX}_jumpbox\e[0m\n"
+  else
+    echo -e "\nYou can access the jumpbox by doing: \e[97mssh -i ${KEY_PATH} ubuntu@${JUMPBOX_IP}\e[0m\n"
+  fi
 fi
