@@ -2,14 +2,7 @@
 
 set -e
 
-# Use > 1 to consume two arguments per pass in the loop (e.g. each
-# argument has a corresponding value to go with it).
-# Use > 0 to consume one or more arguments per pass in the loop (e.g.
-# some arguments don't have a corresponding value to go with it such
-# as in the --default example).
-
 SSH_CONFIG_FILE=~/.ssh/config
-#SSH_CONFIG_FILE=test_file.txt
 ADD_TO_SSH_CONFIG=false
 MYSQL=false
 LOGSEARCH=false
@@ -22,6 +15,21 @@ done
 
 TERRAFORM_COMMAND=$1
 shift
+
+if [[ $TERRAFORM_COMMAND = "help" ]]; then
+
+  cat <<EOL
+Usage:
+  ./shape.sh command -p=[prefix] --add-jumpbox --mysql --logsearch
+
+  command: any Terraform command
+  -p (or --prefix): the prefix for the infrastructure names.
+  --add-jumpbox: once the deploy is done, this flag will add the jumpbox SSH configuration to the SSH config file.
+  --mysql - NOT IMPLEMENTED -: deploys also the MySQL BOSH Release
+  --logsearch - NOT IMPLEMENTED -: deploys also the ELK BOSH Releases
+
+EOL
+fi
 
 for i in "$@"
 do
