@@ -88,7 +88,6 @@ if [[ $TERRAFORM_COMMAND = "apply" ]]; then
 
   if [[ $ADD_TO_SSH_CONFIG = true ]]; then
     cat >> $SSH_CONFIG_FILE <<EOL
-
 Host ${PREFIX}_jumpbox
   User ubuntu
   HostName ${JUMPBOX_IP}
