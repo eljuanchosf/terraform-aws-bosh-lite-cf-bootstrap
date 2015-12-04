@@ -52,23 +52,22 @@ case $i in
 esac
 done
 
-cat <<EOL
+if [[ $TERRAFORM_COMMAND = "apply" ]]; then
+  echo You will be deploying Bosh Lite/CF with the following config:
+  echo -------------------------------------------------------------
+  echo -e "AWS Resource Prefix: \e[32m${PREFIX}\e[0m"
+  echo -e "Add Jumpbox to $SSH_CONFIG_FILE: \e[31m${ADD_TO_SSH_CONFIG}\e[0m"
+  echo -e "Deploy MySQL BOSH Release: \e[31m${MYSQL}\e[0m"
+  echo -e "Deploy Logsearch BOSH Release: \e[31m${LOGSEARCH}\e[0m"
 
-You will be deploying Bosh Lite/CF with the following config
-------------------------------------------------------------
-EOL
-echo -e "AWS Resource Prefix: \e[32m${PREFIX}\e[0m"
-echo -e "Add Jumpbox to $SSH_CONFIG_FILE: \e[31m${ADD_TO_SSH_CONFIG}\e[0m"
-echo -e "Deploy MySQL BOSH Release: \e[31m${MYSQL}\e[0m"
-echo -e "Deploy Logsearch BOSH Release: \e[31m${LOGSEARCH}\e[0m"
-
-if [[ $FORCE = false && $TERRAFORM_COMMAND = "apply" ]]; then
-  echo
-  read -p "Are you sure? (Y/n) " -n 1 -r
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
-  then
-      echo
-      exit 1
+  if [[ $FORCE = false ]]; then
+    echo
+    read -p "Are you sure? (Y/n) " -n 1 -r
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+    then
+        echo
+        exit 1
+    fi
   fi
 fi
 
