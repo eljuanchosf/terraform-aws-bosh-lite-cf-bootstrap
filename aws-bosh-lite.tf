@@ -134,10 +134,15 @@ resource "aws_instance" "jumpbox" {
       destination = "/home/ubuntu/provision_cf.sh"
     }
 
+		provisioner "file" {
+      source = "${path.module}/provisioner.sh"
+      destination = "/home/ubuntu/provisioner.sh"
+    }
     provisioner "remote-exec" {
       inline = [
           "chmod +x /home/ubuntu/provision_cf.sh",
-          "/home/ubuntu/provision_cf.sh ${aws_instance.bosh-lite.public_ip} ${var.bosh_lite_stemcell}"
+					"chmod +x /home/ubuntu/provisioner.sh",
+					"cd /home/ubuntu; ./provisioner.sh ${aws_instance.bosh-lite.public_ip}"
       ]
     }
 }

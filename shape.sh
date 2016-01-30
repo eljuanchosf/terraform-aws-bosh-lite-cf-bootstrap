@@ -98,4 +98,6 @@ EOL
   else
     echo -e "\nYou can access the jumpbox by doing: \e[97mssh -i ${KEY_PATH} ubuntu@${JUMPBOX_IP}\e[0m\n"
   fi
+elif [[ $TERRAFORM_COMMAND = "destroy" ]]; then
+  sed -i -e "/Host ${PREFIX}_jumpbox/,+5d" $SSH_CONFIG_FILE
 fi
