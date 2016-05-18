@@ -8,7 +8,7 @@ WORKSPACE=$HOME/workspace
 CF_RELEASE=$WORKSPACE/cf-release
 AWS_MANIFEST_STUB=$WORKSPACE/aws_manifest_stub.yml
 
-echo Bosh director lives on: $BOSH_DIRECTOR_IP
+echo Bosh director lives on: $DIRECTOR_IP
 echo CF_RELEASE is at $CF_RELEASE
 
 cd $HOME
