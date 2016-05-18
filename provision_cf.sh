@@ -2,7 +2,7 @@
 
 set -e
 
-BOSH_DIRECTOR_IP=$(wget http://ipinfo.io/ip -qO -)
+export DIRECTOR_IP=$(wget http://ipinfo.io/ip -qO -)
 BOSH_LITE_STEMCELL="https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3147-warden-boshlite-ubuntu-trusty-go_agent.tgz"
 WORKSPACE=$HOME/workspace
 CF_RELEASE=$WORKSPACE/cf-release
@@ -39,18 +39,18 @@ mkdir -p $WORKSPACE
 
 cd $WORKSPACE
 
-echo Creating stub manifest for system domain $BOSH_DIRECTOR_IP.xip.io
+echo Creating stub manifest for system domain $DIRECTOR_IP.xip.io
 
 cat > $AWS_MANIFEST_STUB <<EOL
 ---
 properties:
-  domain: $BOSH_DIRECTOR_IP.xip.io
+  domain: $DIRECTOR_IP.xip.io
 EOL
 
 echo Targeting Bosh Lite
 export BOSH_USER=admin
 export BOSH_PASSWORD=admin
-bosh target $BOSH_DIRECTOR_IP lite
+bosh target $DIRECTOR_IP lite
 
 echo Uploading stemcell
 bosh -q -n upload stemcell --skip-if-exists $BOSH_LITE_STEMCELL
@@ -73,17 +73,16 @@ bosh -n upload release
 echo Deploying!
 bosh -n deploy
 
-#echo Getting CF MySQL Release
-#cd $WORKSPACE
-#echo $BOSH_DIRECTOR_IP > api-address
-#git clone -q https://github.com/cloudfoundry/cf-mysql-release.git
-#cd cf-mysql-release
-#git checkout master
-#echo Updating release...
-#./update &>/dev/null
-#bosh upload release releases/cf-mysql-25.yml
-#./bosh-lite/make_manifest
-#bosh -n deploy
-#bosh run errand broker-registrar
+echo Getting CF MySQL Release
+cd $WORKSPACE
+git clone -q https://github.com/cloudfoundry/cf-mysql-release.git
+cd cf-mysql-release
+git checkout v26
+echo Updating release...
+./update &>/dev/null
+bosh upload release releases/cf-mysql-26.yml
+scripts/generate-bosh-lite-manifest
+bosh -n deploy
+bosh run errand broker-registrar
 
-echo Done! Use "'cf api --skip-ssl-validation https://api.$BOSH_DIRECTOR_IP.xip.io'" to connect to the CF deployment.
+echo Done! Use "'cf api --skip-ssl-validation https://api.$DIRECTOR_IP.xip.io'" to connect to the CF deployment.
