@@ -77,11 +77,11 @@ echo Getting CF MySQL Release
 cd $WORKSPACE
 git clone -q https://github.com/cloudfoundry/cf-mysql-release.git
 cd cf-mysql-release
-git checkout v26
-echo Updating release...
-./update &>/dev/null
-bosh upload release releases/cf-mysql-26.yml
-scripts/generate-bosh-lite-manifest
+git checkout v25
+#echo Updating release...
+#./update &>/dev/null
+bosh upload release releases/cf-mysql-25.yml
+./bosh-lite/make_manifest
 bosh -n deploy
 bosh run errand broker-registrar
 
