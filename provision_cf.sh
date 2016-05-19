@@ -75,6 +75,7 @@ bosh -n deploy
 
 echo Getting CF MySQL Release
 cd $WORKSPACE
+echo $DIRECTOR_IP > api-address
 git clone -q https://github.com/cloudfoundry/cf-mysql-release.git
 cd cf-mysql-release
 git checkout v25
