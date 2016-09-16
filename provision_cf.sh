@@ -3,7 +3,7 @@
 set -e
 
 export DIRECTOR_IP=$(wget http://ipinfo.io/ip -qO -)
-BOSH_LITE_STEMCELL="https://s3.amazonaws.com/bosh-warden-stemcells/bosh-stemcell-3147-warden-boshlite-ubuntu-trusty-go_agent.tgz"
+BOSH_LITE_STEMCELL="https://bosh.io/d/stemcells/bosh-warden-boshlite-ubuntu-trusty-go_agent"
 WORKSPACE=$HOME/workspace
 CF_RELEASE=$WORKSPACE/cf-release
 AWS_MANIFEST_STUB=$WORKSPACE/aws_manifest_stub.yml
